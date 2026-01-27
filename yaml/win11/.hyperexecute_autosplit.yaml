@@ -8,6 +8,8 @@ autosplit: true
 retryOnFailure: false
 maxRetries: 1
 concurrency: 2
+env:
+  TEST: ${TEST}
 pre:
   - npm install
   - npx playwright install
