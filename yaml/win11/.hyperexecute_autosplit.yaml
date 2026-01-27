@@ -13,7 +13,7 @@ env:
 pre:
   - npm install
   - npx playwright install
-  - echo $TEST
+  - echo ${TEST}
 cacheKey: '{{ checksum "package-lock.json" }}'
 cacheDirectories:
   - node_modules
