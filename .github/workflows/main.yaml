@@ -14,11 +14,38 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Starting CLI testing
-        shell: bash
+      - name: Download HyperExecute CLI
         run: |
           curl https://downloads.lambdatest.com/hyperexecute/linux/hyperexecute -o hyperexecute
           chmod +x hyperexecute
-          ./hyperexecute --user sarvottamk --key LT_2ehpqnIMBw6Jac8dzVd1AtCLQfBJNOUZ8OCw3raPpMpnf91 --config yaml/win11/.hyperexecute_autosplit.yaml
+
+      - name: Run HyperExecute Tests
+        id: hyperexecute
+        shell: bash
+        run: |
+          ./hyperexecute --user sarvottamk --key LT_2ehpqnIMBw6Jac8dzVd1AtCLQfBJNOUZ8OCw3raPpMpnf91 --config yaml/win11/.hyperexecute_autosplit.yaml 2>&1 | tee hyperexecute_output.log &
+          HE_PID=$!
+          
+          # Wait for job to start and capture Job ID
+          sleep 30
+          JOB_ID=$(grep -oP 'https://hyperexecute.lambdatest.com/hyperexecute/task/\K[a-zA-Z0-9-]+' hyperexecute_output.log | head -1)
+          echo "job_id=$JOB_ID" >> $GITHUB_OUTPUT
+          echo "Captured Job ID: $JOB_ID"
+          
+          # Wait for HyperExecute process to complete
+          wait $HE_PID
           echo "Test completion"
- 
+
+      - name: Cancel HyperExecute Job on Abort
+        if: cancelled()
+        run: |
+          JOB_ID="${{ steps.hyperexecute.outputs.job_id }}"
+          if [ -n "$JOB_ID" ]; then
+            echo "Aborting HyperExecute Job: $JOB_ID"
+            curl -s -X POST "https://api.hyperexecute.lambdatest.com/api/v1/jobs/$JOB_ID/abort" \
+              -H "Content-Type: application/json" \
+              -u "sarvottamk:LT_2ehpqnIMBw6Jac8dzVd1AtCLQfBJNOUZ8OCw3raPpMpnf91"
+            echo "Abort request sent"
+          else
+            echo "No Job ID found to abort"
+          fi
