@@ -19,6 +19,6 @@ jobs:
         run: |
           curl https://downloads.lambdatest.com/hyperexecute/linux/hyperexecute -o hyperexecute
           chmod +x hyperexecute
-          ./hyperexecute --user sarvottamk --key LT_2ehpqnIMBw6Jac8dzVd1AtCLQfBJNOUZ8OCw3raPpMpnf91 --config yaml/win11/.hyperexecute_autosplits.yaml
+          ./hyperexecute --user sarvottamk --key LT_2ehpqnIMBw6Jac8dzVd1AtCLQfBJNOUZ8OCw3raPpMpnf91 --config yaml/win11/.hyperexecute_autosplit.yaml
           echo "Test completion"
  
