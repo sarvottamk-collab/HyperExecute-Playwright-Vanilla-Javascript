@@ -3,7 +3,7 @@ const { expect } = require('@playwright/test')
 
 test.describe('PlayWright Vanilla JS - 1', () => {
   test('Navigate PlayWright Documentation', async ({ page }) => {
-    console.log('TEST env variable:', process.env.TESTs);
+    console.log('TEST env variable:', process.env.TEST);
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto('https://playwright.dev/');
     await expect(page).toHaveTitle(/Playwright/);
