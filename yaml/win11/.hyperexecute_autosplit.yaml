@@ -9,7 +9,7 @@ retryOnFailure: false
 maxRetries: 1
 concurrency: 2
 env:
-  TEST: ${TESTs}
+  TEST: ${{.secret.TESTs}}
 pre:
   - npm install
   - npx playwright install
