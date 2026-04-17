@@ -9,11 +9,12 @@ retryOnFailure: false
 maxRetries: 1
 concurrency: 2
 env:
-  TEST: ${TEST}
+  TEST: ${.secrets.TESTs}
 pre:
   - npm install
   - npx playwright install
   - echo ${TEST}
+  - env
 cacheKey: '{{ checksum "package-lock.json" }}'
 cacheDirectories:
   - node_modules
